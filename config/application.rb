@@ -1,18 +1,12 @@
-require "bundler/inline"
+# frozen_string_literal: true
 
-gemfile true do
-  source "https://rubygems.org"
-  gem "rails", "~> 6.1.3"
-  gem "redis", "~> 4.2.5"
-  gem "cable_ready", "~> 4.5.0"
-  gem "stimulus_reflex", "~> 3.4.1"
-  gem "puma", "~> 5.2.2"
-  gem "pry"
-end
+require_relative "boot"
 
+require "rails"
+
+require "stimulus_reflex"
+require "action_cable/engine"
 require "action_controller/railtie"
-require "rails/command"
-require "rails/commands/server/server_command"
 
 module ApplicationCable; end
 
@@ -81,10 +75,5 @@ class MiniApp < Rails::Application
   end
 end
 
-if RUBY_VERSION.to_f > 2.5 
-  system "yarn && yarn build", exception: true
-else
-  system "yarn && yarn build"
-end
-
-Rails::Server.new(app: MiniApp, Host: "0.0.0.0", Port: 3000).start
+# Initialize the Rails application.
+Rails.application.initialize!
